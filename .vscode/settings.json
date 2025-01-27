@@ -1,0 +1,19 @@
+{
+    "java.home": "/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home",
+    "java.configuration.runtimes": 
+      {
+        "name": "JavaSE-21",  
+        "path": "/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home",
+        "default": true
+      },
+      "java.project.sourcePaths": ["src"],
+      "java.project.outputPath": "build/classes",
+      "ant.home": "/usr/local/Cellar/ant/1.10.15_1",  
+    "ant.targets": [
+        {
+            "name": "build",
+            "file": "${workspaceFolder}/build.xml"
+        }
+    ]
+  }
+  
