@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="modern-java-project" default="build" basedir=".">
+    <!-- Project Properties -->
+    
+    <property environment="env"/>
+    <property name="java.home" value="/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home"/>
+    <property name="src.dir" value="src"/>
+    <property name="build.dir" value="build"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    
+    <!-- Configure compilation settings to use Java 21 features -->
+    <presetdef name="javac">
+        <javac release="21" 
+               enablepreview="true"
+               fork="true"
+               executable="${java.home}/bin/javac"/>
+    </presetdef>
+
+    <path id="compile.classpath">
+        <pathelement location="${classes.dir}"/>
+        
+        <fileset dir="lib" erroronmissingdir="false">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+    <!-- Clean target to remove build artifacts -->
+    <target name="clean" description="Clean the build directory">
+        <delete dir="${build.dir}" includeemptydirs="true"/>
+    </target>
+
+    <!-- Initialize build directories -->
+    <target name="init" depends="clean" description="Create necessary directories">
+        <mkdir dir="${classes.dir}"/>
+        <!-- Create any additional necessary directories -->
+        <mkdir dir="${build.dir}/resources"/>
+    </target>
+
+    <!-- Compile the Java source files -->
+    <target name="compile" depends="init" description="Compile Java source code">
+        <javac srcdir="${src.dir}"
+               destdir="${classes.dir}"
+               includeantruntime="false"
+               debug="true"
+               encoding="UTF-8"
+               verbose="false">
+            <classpath refid="compile.classpath"/>
+            <!-- Enable all warnings and use preview features -->
+            <compilerarg line="--enable-preview"/>
+            <compilerarg value="-Xlint:all"/>
+            <compilerarg value="-Werror"/>
+        </javac>
+        
+        <!-- Copy non-Java resources -->
+        <copy todir="${classes.dir}" preservelastmodified="true">
+            <fileset dir="${src.dir}">
+                <exclude name="**/*.java"/>
+                <exclude name="**/*.class"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- Main build target that VS Code will call -->
+    <target name="build" depends="compile" description="Build the complete project">
+        <!-- Add verification steps -->
+        <echo message="Build completed successfully"/>
+        <echo message="Java version:"/>
+        <java fork="true" classname="java.lang.Runtime" outputproperty="java.version">
+            <classpath refid="compile.classpath"/>
+            <arg line="getRuntime().version().toString()"/>
+        </java>
+        <echo message="${java.version}"/>
+    </target>
+</project>
